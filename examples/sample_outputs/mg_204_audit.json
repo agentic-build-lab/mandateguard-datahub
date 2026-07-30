@@ -1,0 +1,29 @@
+{
+  "runId": "run-mg-204",
+  "incident": {
+    "id": "MG-204",
+    "asset": "finance.payments",
+    "rule": "Order-payment amount mismatch",
+    "affectedRecords": 37,
+    "exposureUsd": 48270,
+    "status": "resolved"
+  },
+  "datahubContext": {
+    "source": "MCP",
+    "upstream": ["finance.orders"],
+    "downstream": [
+      "finance.settlements",
+      "executive_revenue"
+    ],
+    "writeBackTools": [
+      "add_tags",
+      "update_description",
+      "save_document"
+    ]
+  },
+  "controls": {
+    "quarantineApplied": true,
+    "unsafeSettlementsPosted": 0,
+    "humanApprovalRequired": true
+  }
+}
