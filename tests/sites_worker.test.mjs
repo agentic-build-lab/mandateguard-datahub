@@ -35,3 +35,27 @@ test("Sites worker delegates non-API requests to static assets", async () => {
   );
   assert.equal(await response.text(), "asset");
 });
+
+test("Sites worker falls back to index.html for client routes", async () => {
+  const requestedPaths = [];
+  const fallbackEnv = {
+    ASSETS: {
+      fetch: async (request) => {
+        const path = new URL(request.url).pathname;
+        requestedPaths.push(path);
+        return path === "/index.html"
+          ? new Response("app shell", { status: 200 })
+          : new Response("missing", { status: 404 });
+      }
+    }
+  };
+
+  const response = await worker.fetch(
+    new Request("https://example.test/incidents/MG-204"),
+    fallbackEnv
+  );
+
+  assert.deepEqual(requestedPaths, ["/incidents/MG-204", "/index.html"]);
+  assert.equal(response.status, 200);
+  assert.equal(await response.text(), "app shell");
+});
