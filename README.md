@@ -8,6 +8,14 @@ back to DataHub.
 
 ![MandateGuard control room](outputs/qa/mandateguard_resolved.png)
 
+## Public demo
+
+Try the interactive hackathon demo at
+[agentic-build-lab.github.io/mandateguard-datahub](https://agentic-build-lab.github.io/mandateguard-datahub/).
+The public build runs the deterministic MG-204 fixture in the browser. The
+repository also includes the server-side DataHub MCP gateway used for connected
+deployments.
+
 ## Why DataHub
 
 Without metadata context, an operations agent can identify bad rows but cannot
