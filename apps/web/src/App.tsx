@@ -5,8 +5,11 @@ import { IncidentTable } from "./components/IncidentTable";
 import { LineageGraph } from "./components/LineageGraph";
 import { Sidebar } from "./components/Sidebar";
 import { WorkflowRail } from "./components/WorkflowRail";
+import { approveDemoState, createDemoState } from "./demo_state";
 import { Icon } from "./icons";
 import type { ControlState } from "./types";
+
+const isStaticDemo = import.meta.env.BASE_URL !== "/";
 
 async function fetchState(path: string, method = "GET") {
   const response = await fetch(path, { method });
@@ -34,7 +37,11 @@ export default function App() {
     setBusy(true);
     setError("");
     try {
-      setState(await fetchState("/api/run", "POST"));
+      setState(
+        isStaticDemo
+          ? createDemoState()
+          : await fetchState("/api/run", "POST")
+      );
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Unable to run control");
     } finally {
@@ -46,7 +53,13 @@ export default function App() {
     setBusy(true);
     setError("");
     try {
-      setState(await fetchState("/api/approve", "POST"));
+      if (isStaticDemo) {
+        setState((current) =>
+          approveDemoState(current ?? createDemoState())
+        );
+      } else {
+        setState(await fetchState("/api/approve", "POST"));
+      }
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Unable to write back");
     } finally {
@@ -55,6 +68,11 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (isStaticDemo) {
+      setState(createDemoState());
+      return;
+    }
+
     fetchState("/api/state")
       .then(setState)
       .catch((reason) => setError(reason instanceof Error ? reason.message : "Unable to load"));
