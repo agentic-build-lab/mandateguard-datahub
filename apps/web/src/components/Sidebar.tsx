@@ -1,14 +1,24 @@
 import { Icon, type IconName } from "../icons";
 
-const items: Array<{ label: string; icon: IconName }> = [
-  { label: "Control room", icon: "control" },
-  { label: "Incidents", icon: "incident" },
-  { label: "Lineage", icon: "lineage" },
-  { label: "Audit log", icon: "audit" },
-  { label: "Settings", icon: "settings" }
+export type NavSection = "control-room" | "incidents" | "lineage" | "audit-log" | "settings";
+
+const items: Array<{ id: NavSection; label: string; icon: IconName }> = [
+  { id: "control-room", label: "Control room", icon: "control" },
+  { id: "incidents", label: "Incidents", icon: "incident" },
+  { id: "lineage", label: "Lineage", icon: "lineage" },
+  { id: "audit-log", label: "Audit log", icon: "audit" },
+  { id: "settings", label: "Settings", icon: "settings" }
 ];
 
-export function Sidebar({ mode }: { mode: "connected" | "fixture" }) {
+export function Sidebar({
+  mode,
+  activeSection,
+  onNavigate
+}: {
+  mode: "connected" | "fixture";
+  activeSection: NavSection;
+  onNavigate: (section: NavSection) => void;
+}) {
   return (
     <aside className="sidebar">
       <div className="brand">
@@ -19,8 +29,14 @@ export function Sidebar({ mode }: { mode: "connected" | "fixture" }) {
       </div>
 
       <nav aria-label="Primary">
-        {items.map((item, index) => (
-          <button className={index === 0 ? "nav-item active" : "nav-item"} key={item.label}>
+        {items.map((item) => (
+          <button
+            className={activeSection === item.id ? "nav-item active" : "nav-item"}
+            key={item.id}
+            onClick={() => onNavigate(item.id)}
+            aria-label={item.label}
+            aria-current={activeSection === item.id ? "page" : undefined}
+          >
             <Icon name={item.icon} />
             <span>{item.label}</span>
           </button>
@@ -41,7 +57,6 @@ export function Sidebar({ mode }: { mode: "connected" | "fixture" }) {
             Liu Chongxin
             <small>Platform engineer</small>
           </span>
-          <Icon name="chevron" />
         </div>
       </div>
     </aside>
