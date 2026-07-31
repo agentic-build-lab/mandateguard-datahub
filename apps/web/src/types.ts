@@ -6,6 +6,7 @@ export interface ControlState {
   incident: {
     id: string;
     asset: string;
+    assetUrn?: string;
     rule: string;
     severity: string;
     affectedRecords: number;
@@ -36,5 +37,12 @@ export interface ControlState {
     tags: string[];
     descriptionAppended: boolean;
     auditDocumentSaved: boolean;
+    simulationReceipts: number;
+  };
+  catalogRead?: {
+    source: "deterministic_fixture" | "datahub_mcp";
+    assetUrn: string;
+    upstreamCount: number;
+    downstreamCount: number;
   };
 }

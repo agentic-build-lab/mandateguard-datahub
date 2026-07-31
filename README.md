@@ -54,13 +54,27 @@ The React app runs at `http://127.0.0.1:4173` and proxies API calls to port
 Copy `.env.example` values into your process environment:
 
 ```text
-DATAHUB_MCP_URL=https://<tenant>.acryl.io/integrations/ai/mcp
+DATAHUB_MCP_URL=https://<tenant>.acryl.io/integrations/ai/mcp/
 DATAHUB_TOKEN=<personal-access-token>
 DATAHUB_MUTATIONS_ENABLED=true
 ```
 
-Self-hosted DataHub can use `http://<gms-host>:8080/mcp`. Keep mutations
-disabled while validating connectivity.
+For self-hosted DataHub, run the official `mcp-server-datahub` as a separate
+service and configure that service with `DATAHUB_GMS_URL` and
+`DATAHUB_GMS_TOKEN`. Set `DATAHUB_MCP_URL` to the MCP service's Streamable HTTP
+endpoint, not directly to GMS. Keep application mutations disabled while
+validating connectivity.
+
+In connected mode, **Run control** first checks the MCP tool catalog, discovers
+`finance.payments` with `search`, fetches its metadata with `get_entities`, and
+reads both upstream and downstream `get_lineage` results. The API builds the
+displayed asset graph from those responses and fails clearly if the required
+asset, entity context, or tools are unavailable.
+
+`DATAHUB_MUTATIONS_ENABLED=true` is MandateGuard's deployment-level write gate.
+The DataHub MCP server must separately expose its mutation tools (typically
+with `TOOLS_IS_MUTATION_ENABLED=true`), and the two tag URNs used by the
+scenario must already exist in the catalog.
 
 ## Demo workflow
 
@@ -69,8 +83,9 @@ disabled while validating connectivity.
 3. Select **Approve reconciliation**.
 4. Verify exposure reaches zero and the final audit step completes.
 
-The fixture gateway records the same three tool calls used by the remote
-gateway: `add_tags`, `update_description`, and `save_document`.
+The fixture gateway records three simulation receipts matching the planned
+remote operations: `add_tags`, `update_description`, and `save_document`. It
+does not change a DataHub tenant.
 
 ## Quality checks
 
@@ -80,6 +95,8 @@ npm run check
 
 Sample output is available in
 [`examples/sample_outputs/mg_204_audit.json`](examples/sample_outputs/mg_204_audit.json).
+The submission video's media provenance is recorded in
+[`docs/demo_video_media_sources.md`](docs/demo_video_media_sources.md).
 
 ## Pre-existing work disclosure
 

@@ -2,7 +2,11 @@ import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
-import { approveReconciliation, createControlState } from "./control_engine.mjs";
+import {
+  approveReconciliation,
+  createControlState,
+  runControl
+} from "./control_engine.mjs";
 import { createGateway } from "./datahub_gateway.mjs";
 
 const projectRoot = normalize(join(fileURLToPath(new URL(".", import.meta.url)), "../.."));
@@ -52,8 +56,8 @@ const server = createServer(async (request, response) => {
       return json(response, 200, state);
     }
     if (request.url === "/api/run" && request.method === "POST") {
-      state = createControlState();
       gateway = createGateway();
+      state = await runControl(gateway);
       return json(response, 200, state);
     }
     if (request.url === "/api/approve" && request.method === "POST") {

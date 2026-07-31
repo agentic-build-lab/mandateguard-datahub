@@ -15,7 +15,7 @@ Verified render:
 | Palette | True white, ink, cobalt, risk red, success green | Same token roles in the browser render | Matched |
 | Typography | Modern grotesk, tabular financial values, compact control text | Inter UI system with tabular summary values and deliberate control sizes | Matched |
 | Container model | Open workspace, tables/rails, one inspector | No bento grid; surfaces follow reference hierarchy | Matched |
-| Audit state | Timeline ends in pending write-back | Approved state ends at 09:45 with committed write-back | Intentional functional state |
+| Audit state | Timeline ends in pending write-back | Fixture approval ends at 09:45 with three simulated receipts; connected mode performs the catalog mutations | Intentional functional state |
 | Responsive behavior | Desktop-first 16:10 control room | Desktop verified; CSS collapses sidebar and inspector below 900px | Implemented |
 
 Above-the-fold copy diff: no unapproved hero, eyebrow, badge, proof row, or

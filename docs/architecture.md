@@ -12,7 +12,7 @@ Node control API ----> deterministic anomaly / reconciliation engine
         +----> fixture gateway (public demo)
         |
         +----> DataHub MCP gateway
-                 search / get_lineage
+                 tools/list / search / get_entities / get_lineage
                  add_tags / update_description / save_document
 ```
 
@@ -21,13 +21,20 @@ workflow without credentials. Setting `DATAHUB_MCP_URL` and `DATAHUB_TOKEN`
 switches the same gateway interface to DataHub's MCP Server. Catalog mutations
 remain disabled until `DATAHUB_MUTATIONS_ENABLED=true`.
 
+`POST /api/run` is the connected read path. It verifies the required tools,
+searches for `finance.payments`, validates the returned entity with
+`get_entities`, then reads upstream and downstream lineage. The resulting
+assets and impact count come from those MCP responses. Fixture mode returns the
+same shape from deterministic in-process data.
+
 ## Safety boundary
 
 - Detection, impact calculation, and reconciliation planning are read-only.
 - Quarantine is simulated against the sample operational dataset.
+- Fixture approval records simulation receipts and never changes a tenant.
 - DataHub catalog writes require explicit user approval in the control room.
 - Remote mutations require a second deployment-level switch.
-- Every mutation is represented in the audit document.
+- The audit document records the incident and affected asset set.
 
 ## DataHub contribution
 
