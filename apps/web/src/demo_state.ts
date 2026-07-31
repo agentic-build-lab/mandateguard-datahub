@@ -69,7 +69,7 @@ export function createDemoState(): ControlState {
       {
         time: "09:42",
         title: "Lineage resolved via DataHub MCP",
-        detail: "Three downstream assets identified and impact calculated.",
+        detail: "Two downstream assets identified and impact calculated.",
         state: "complete"
       },
       {
@@ -86,8 +86,8 @@ export function createDemoState(): ControlState {
       },
       {
         time: "Pending",
-        title: "Write back to DataHub",
-        detail: "Tags, description, and audit document will be committed.",
+        title: "Prepare DataHub write-back",
+        detail: "Public fixture records receipts; the connected gateway can commit them.",
         state: "pending"
       }
     ],
