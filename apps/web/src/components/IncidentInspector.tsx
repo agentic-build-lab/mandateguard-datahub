@@ -22,7 +22,9 @@ export function IncidentInspector({
   const quarantineComplete =
     state.workflow.find((step) => step.label === "Quarantine")?.state === "complete";
   const isolatedCount = quarantineComplete ? state.incident.affectedRecords : 0;
-  const protectedCount = quarantineComplete ? 3 : 0;
+  const protectedCount = quarantineComplete
+    ? state.assets.filter((asset) => asset.status === "protected").length
+    : 0;
   const writeBackStatus = resolved
     ? fixtureMode
       ? "Fixture receipt generated"
