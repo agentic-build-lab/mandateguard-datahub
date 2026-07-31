@@ -23,7 +23,7 @@ export interface ControlState {
     urn: string;
     name: string;
     kind: string;
-    status: "upstream" | "risk" | "protected";
+    status: "upstream" | "risk" | "downstream" | "protected";
   }>;
   evidence: Array<{ asset: string; detail: string }>;
   timeline: Array<{

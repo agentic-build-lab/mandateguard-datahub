@@ -116,7 +116,7 @@ export function approveDemoState(state: ControlState): ControlState {
               ...item,
               time: "09:45",
               state: "complete",
-              detail: "Tags, description, and audit document committed to DataHub."
+              detail: "Fixture receipts generated for tags, description, and audit document."
             }
           : item
     ),
