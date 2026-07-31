@@ -9,13 +9,18 @@
     "status": "resolved"
   },
   "datahubContext": {
-    "source": "MCP",
+    "source": "deterministic_fixture",
+    "mcpContract": [
+      "search",
+      "get_entities",
+      "get_lineage"
+    ],
     "upstream": ["finance.orders"],
     "downstream": [
       "finance.settlements",
       "executive_revenue"
     ],
-    "writeBackTools": [
+    "plannedWriteBackTools": [
       "add_tags",
       "update_description",
       "save_document"

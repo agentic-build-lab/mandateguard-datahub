@@ -48,7 +48,11 @@ export function Sidebar({
           <span className={mode === "connected" ? "dot connected" : "dot"} />
           <span>
             DataHub {mode === "connected" ? "connected" : "fixture mode"}
-            <small>via MCP</small>
+            <small>
+              {mode === "connected"
+                ? "via MCP"
+                : "deterministic · no tenant mutation"}
+            </small>
           </span>
         </div>
         <div className="profile">

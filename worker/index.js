@@ -34,8 +34,8 @@ const BASE_TIMELINE = [
   },
   {
     time: "09:42",
-    title: "Lineage resolved via DataHub MCP",
-    detail: "Three downstream assets identified and impact calculated.",
+    title: "Lineage resolved from deterministic fixture",
+    detail: "Two downstream assets identified and impact calculated.",
     state: "complete"
   },
   {
@@ -52,8 +52,8 @@ const BASE_TIMELINE = [
   },
   {
     time: "Pending",
-    title: "Write back to DataHub",
-    detail: "Tags, description, and audit document will be committed.",
+    title: "Prepare DataHub write-back",
+    detail: "Fixture approval records receipts without changing a DataHub tenant.",
     state: "pending"
   }
 ];
@@ -94,7 +94,8 @@ function createControlState() {
     writeBack: {
       tags: ["MandateGuard_Quarantined", "Finance_Critical"],
       descriptionAppended: false,
-      auditDocumentSaved: false
+      auditDocumentSaved: false,
+      simulationReceipts: 0
     }
   };
 }
@@ -116,14 +117,15 @@ function approveReconciliation(currentState) {
               ...item,
               time: "09:45",
               state: "complete",
-              detail: "Tags, description, and audit document committed to DataHub."
+              detail: "Fixture receipts generated; no DataHub tenant was changed."
             }
           : item
     ),
     writeBack: {
       ...currentState.writeBack,
-      descriptionAppended: true,
-      auditDocumentSaved: true
+      descriptionAppended: false,
+      auditDocumentSaved: false,
+      simulationReceipts: 3
     }
   };
 }

@@ -34,6 +34,8 @@ export function createDemoState(): ControlState {
     incident: {
       id: "MG-204",
       asset: "finance.payments",
+      assetUrn:
+        "urn:li:dataset:(urn:li:dataPlatform:snowflake,finance.payments,PROD)",
       rule: "Order-payment amount mismatch",
       severity: "Critical",
       affectedRecords: 37,
@@ -68,7 +70,7 @@ export function createDemoState(): ControlState {
       },
       {
         time: "09:42",
-        title: "Lineage resolved via DataHub MCP",
+        title: "Lineage resolved from deterministic fixture",
         detail: "Two downstream assets identified and impact calculated.",
         state: "complete"
       },
@@ -94,7 +96,8 @@ export function createDemoState(): ControlState {
     writeBack: {
       tags: ["MandateGuard_Quarantined", "Finance_Critical"],
       descriptionAppended: false,
-      auditDocumentSaved: false
+      auditDocumentSaved: false,
+      simulationReceipts: 0
     }
   };
 }
@@ -122,8 +125,9 @@ export function approveDemoState(state: ControlState): ControlState {
     ),
     writeBack: {
       ...state.writeBack,
-      descriptionAppended: true,
-      auditDocumentSaved: true
+      descriptionAppended: false,
+      auditDocumentSaved: false,
+      simulationReceipts: 3
     }
   };
 }

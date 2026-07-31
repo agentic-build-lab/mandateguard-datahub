@@ -24,8 +24,13 @@ test("Sites worker runs and approves the public demo workflow", async () => {
   const resolved = await approveResponse.json();
   assert.equal(resolved.summary.activeIncidents, 0);
   assert.equal(resolved.summary.exposure, 0);
-  assert.equal(resolved.writeBack.descriptionAppended, true);
-  assert.equal(resolved.writeBack.auditDocumentSaved, true);
+  assert.equal(resolved.writeBack.descriptionAppended, false);
+  assert.equal(resolved.writeBack.auditDocumentSaved, false);
+  assert.equal(resolved.writeBack.simulationReceipts, 3);
+  assert.match(
+    resolved.timeline.at(-1).detail,
+    /no DataHub tenant was changed/
+  );
 });
 
 test("Sites worker delegates non-API requests to static assets", async () => {

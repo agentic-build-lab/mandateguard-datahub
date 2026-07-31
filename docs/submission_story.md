@@ -14,24 +14,27 @@ MandateGuard is an AI-native operations control center that:
    lineage;
 3. quarantines unsafe records before settlement;
 4. prepares a deterministic reconciliation plan for approval; and
-5. writes tags, incident context, and a complete audit document back to
+5. writes tags, incident context, and an audit document back to
    DataHub.
 
 The included MG-204 scenario isolates 37 payment records representing $48,270
-in exposure and protects three downstream assets.
+in exposure and protects two downstream assets.
 
 # How we built it
 
 The project uses a React and TypeScript control room, a dependency-light Node
 control API, and a pluggable DataHub gateway. The gateway speaks Model Context
-Protocol over streamable HTTP and calls DataHub MCP tools. A deterministic
-fixture implements the same interface so judges can test the complete workflow
-without credentials.
+Protocol over streamable HTTP. In connected mode, a control run checks the tool
+catalog and calls `search`, `get_entities`, and upstream/downstream
+`get_lineage` before constructing the displayed impact graph. A deterministic
+fixture implements the same gateway interface so judges can test the complete
+workflow without credentials or tenant access.
 
 The control engine deliberately keeps anomaly detection and reconciliation
 logic outside the interface. Human approval is required before catalog
 write-back. In a connected DataHub deployment, approval invokes `add_tags`,
-`update_description`, and `save_document`.
+`update_description`, and `save_document`. In the public fixture, approval only
+generates simulation receipts for those planned operations.
 
 # Challenges we ran into
 

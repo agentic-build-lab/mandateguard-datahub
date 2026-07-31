@@ -20,25 +20,30 @@ export class DataHubMcpClient {
     this.fetchImpl = fetchImpl;
     this.requestId = 0;
     this.sessionId = null;
+    this.initialized = false;
   }
 
-  async request(method, params = {}) {
+  headers() {
     const headers = {
       Accept: "application/json, text/event-stream",
       "Content-Type": "application/json"
     };
     if (this.token) headers.Authorization = `Bearer ${this.token}`;
     if (this.sessionId) headers["Mcp-Session-Id"] = this.sessionId;
+    return headers;
+  }
 
+  async request(method, params) {
+    const body = {
+      jsonrpc: JSON_RPC_VERSION,
+      id: ++this.requestId,
+      method
+    };
+    if (params !== undefined) body.params = params;
     const response = await this.fetchImpl(this.url, {
       method: "POST",
-      headers,
-      body: JSON.stringify({
-        jsonrpc: JSON_RPC_VERSION,
-        id: ++this.requestId,
-        method,
-        params
-      })
+      headers: this.headers(),
+      body: JSON.stringify(body)
     });
 
     if (!response.ok) {
@@ -53,16 +58,40 @@ export class DataHubMcpClient {
     return payload.result;
   }
 
+  async notify(method, params) {
+    const body = {
+      jsonrpc: JSON_RPC_VERSION,
+      method
+    };
+    if (params !== undefined) body.params = params;
+    const response = await this.fetchImpl(this.url, {
+      method: "POST",
+      headers: this.headers(),
+      body: JSON.stringify(body)
+    });
+    if (!response.ok) {
+      throw new Error(`DataHub MCP ${method} failed with ${response.status}`);
+    }
+  }
+
   async initialize() {
-    return this.request("initialize", {
+    const result = await this.request("initialize", {
       protocolVersion: "2025-03-26",
       capabilities: {},
       clientInfo: { name: "mandateguard", version: "0.1.0" }
     });
+    await this.notify("notifications/initialized");
+    this.initialized = true;
+    return result;
+  }
+
+  async listTools() {
+    if (!this.initialized) await this.initialize();
+    return this.request("tools/list");
   }
 
   async callTool(name, args) {
-    if (!this.sessionId) await this.initialize();
+    if (!this.initialized) await this.initialize();
     return this.request("tools/call", { name, arguments: args });
   }
 }

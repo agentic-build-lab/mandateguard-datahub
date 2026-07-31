@@ -12,7 +12,7 @@ import type { ControlState } from "./types";
 const isStaticDemo = import.meta.env.BASE_URL !== "/";
 const runStages = [
   "Detecting mismatch",
-  "Resolving DataHub lineage",
+  "Replaying deterministic lineage",
   "Quarantining 37 records",
   "Preparing reconciliation"
 ];
@@ -81,9 +81,12 @@ export default function App() {
   const navigate = useCallback((section: NavSection) => {
     setActiveSection(section);
     window.requestAnimationFrame(() => {
-      document.getElementById(section)?.scrollIntoView({
+      const target = document.getElementById(section);
+      if (!target) return;
+      window.scrollTo({
+        top: target.getBoundingClientRect().top + window.scrollY - 18,
+        left: 0,
         behavior: "smooth",
-        block: "start"
       });
     });
   }, []);
@@ -278,8 +281,16 @@ export default function App() {
             </article>
             <article>
               <span>Gateway</span>
-              <strong>DataHub MCP ready</strong>
-              <small>Configure environment variables to use the included remote gateway.</small>
+              <strong>
+                {state.mode === "connected"
+                  ? "Connected MCP gateway"
+                  : "Connected gateway included"}
+              </strong>
+              <small>
+                {state.mode === "connected"
+                  ? "Run control validates search, entity, and lineage tools."
+                  : "Configure environment variables to enable remote MCP reads."}
+              </small>
             </article>
             <article>
               <span>Mutation policy</span>
